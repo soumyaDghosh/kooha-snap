@@ -1,0 +1,125 @@
+name: kooha
+base: core22
+adopt-info: kooha
+grade: stable
+confinement: strict
+compression: lzo
+
+parts:
+  launcher:
+    source: .
+    plugin: dump
+    prime:
+      - launcher
+
+  rustup:
+    plugin: rust
+    source: .
+    rust-channel: "1.76"
+    override-build: ""
+    override-prime: ""
+
+  # gst-plugins-ugly:
+  #   plugin: meson
+  #   source: https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.6.tar.xz
+  #   build-environment:
+  #     - PKG_CONFIG_PATH: /snap/ffmpeg-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:${PKG_CONFIG_PATH}
+  #     - PATH: /snap/ffmpeg-2204-sdk/current/usr/bin:${PATH}
+  #     - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+  #   build-snaps:
+  #     - ffmpeg-2204-sdk
+  #   build-packages:
+  #     - libgstreamer1.0-dev
+  #   meson-parameters:
+  #     - --prefix=/usr
+  #     - -Ddoc=disabled
+  #     - -Dnls=disabled
+  #     - -Dtests=disabled
+  #     - -Dgpl=disabled
+
+  pipewire:
+    source: https://gitlab.freedesktop.org/pipewire/pipewire.git
+    source-tag: '1.1.81' 
+    source-depth: 1
+    plugin: meson
+    build-environment:
+      - PYTHONPATH: /usr/lib/python3/dist-packages:$PYTHONPATH
+    build-packages:
+      - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - libgstreamer-plugins-good1.0-dev
+      - libgstreamer1.0-dev
+      - libapparmor-dev
+      - libsnapd-glib-dev
+      - python3-jinja2
+      - python3-ply
+      - python3-yaml
+      - libyaml-dev
+    build-snaps:
+      - cmake
+    meson-parameters:
+      - --prefix=/usr
+      - -Dexamples=disabled
+      - -Dtests=disabled
+      - -Dgstreamer=enabled
+      - -Dgstreamer-device-provider=enabled
+      - -Dlibcamera=enabled
+      - -Dsnap=enabled
+    prime:
+      - -usr/include
+      - -usr/lib/systemd
+
+  kooha:
+    after: [rustup, pipewire]
+    plugin: meson
+    source: https://github.com/SeaDve/Kooha.git
+    source-tag: "v2.3.0"
+    build-packages:
+      - clang
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+    build-environment:
+      - PATH: ${HOME}/.cargo/bin:${PATH}
+      - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+    meson-parameters:
+      - --prefix=/snap/kooha/current/usr
+    parse-info: [usr/share/metainfo/io.github.seadve.Kooha.metainfo.xml]
+    organize:
+      snap/kooha/current: .
+
+  deps:
+    after: [kooha]
+    plugin: nil
+    stage-packages:
+      - gstreamer1.0-plugins-ugly
+    override-prime: |
+      craftctl default
+      set -eux
+      for snap in "core22" "gnome-42-2204"; do
+        cd "/snap/$snap/current" && find . -type f,l -exec rm -rf "$CRAFT_PART_INSTALL/{}" \;
+      done
+    prime:
+      - -usr/share/bug
+      - -usr/share/pkgconfig
+      - -usr/share/doc
+      - -usr/share/lintian
+      - -usr/share/zsh
+
+slots:
+  kooha:
+    interface: dbus
+    bus: session
+    name: io.github.seadve.Kooha
+
+apps:
+  kooha:
+    command: usr/bin/kooha
+    command-chain:
+      - launcher
+    desktop: usr/share/applications/io.github.seadve.Kooha.desktop
+    common-id: io.github.seadve.Kooha
+    plugs:
+      - home
+      - audio-record
+      - audio-playback
+    extensions: [gnome]

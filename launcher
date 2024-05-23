@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export PIPEWIRE_CONFIG_DIR="$SNAP/usr/share/pipewire"
+export PIPEWIRE_MODULE_DIR="$SNAP/usr/lib/$SNAP_LAUNCHER_ARCH_TRIPLET/pipewire-0.3"
+export SPA_PLUGIN_DIR="$SNAP/usr/lib/$SNAP_LAUNCHER_ARCH_TRIPLET/spa-0.2"
+exec "$@"
