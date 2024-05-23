@@ -38,8 +38,7 @@ parts:
   #     - -Dgpl=disabled
 
   pipewire:
-    source: https://gitlab.freedesktop.org/pipewire/pipewire.git
-    source-tag: '1.1.81' 
+    source: https://gitlab.freedesktop.org/pipewire/pipewire.git 
     source-depth: 1
     plugin: meson
     build-environment:
