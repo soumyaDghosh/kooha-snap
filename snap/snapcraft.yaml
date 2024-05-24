@@ -72,7 +72,7 @@ parts:
     after: [rustup, pipewire]
     plugin: meson
     source: https://github.com/SeaDve/Kooha.git
-    source-tag: "v2.3.0"
+    source-tag: "v2.2.4"
     build-packages:
       - clang
       - libgstreamer1.0-dev
