@@ -39,6 +39,7 @@ parts:
 
   pipewire:
     source: https://gitlab.freedesktop.org/pipewire/pipewire.git 
+    source-tag: "1.1.82"
     source-depth: 1
     plugin: meson
     build-environment:
@@ -73,6 +74,7 @@ parts:
     plugin: meson
     source: https://github.com/SeaDve/Kooha.git
     source-tag: "v2.2.4"
+    source-depth: 1
     build-packages:
       - clang
       - libgstreamer1.0-dev
