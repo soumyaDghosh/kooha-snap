@@ -1,5 +1,5 @@
 name: kooha
-base: core22
+base: core24
 adopt-info: kooha
 grade: stable
 confinement: strict
@@ -96,7 +96,7 @@ parts:
     override-prime: |
       craftctl default
       set -eux
-      for snap in "core22" "gnome-42-2204"; do
+      for snap in "core24" "gnome-46-2404"; do
         cd "/snap/$snap/current" && find . -type f,l -exec rm -rf "$CRAFT_PART_INSTALL/{}" \;
       done
     prime:
@@ -123,4 +123,5 @@ apps:
       - home
       - audio-record
       - audio-playback
+      - screen-inhibit-control
     extensions: [gnome]
