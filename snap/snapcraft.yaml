@@ -39,7 +39,7 @@ parts:
 
   pipewire:
     source: https://gitlab.freedesktop.org/pipewire/pipewire.git 
-    source-tag: '1.2.7'
+    source-tag: '1.3.81'
     source-depth: 1
     plugin: meson
     build-environment:
