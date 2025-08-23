@@ -73,7 +73,7 @@ parts:
     after: [rustup, pipewire]
     plugin: meson
     source: https://github.com/SeaDve/Kooha.git
-    source-tag: 'v2.3.0'
+    source-tag: 'v2.3.1'
     source-depth: 1
     build-packages:
       - clang
